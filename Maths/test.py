@@ -6,7 +6,7 @@ def stegano(imgpath, msg):
     im = im.convert("RGBA")
     # on récupère les dimensions de l'image
     w , h = im.size
-    # on sépare l'image en trois : rouge, vert et bleu
+    # on sépare l'image en quatre : rouge, vert, bleu, a
     r , g , b, a = im.split()
     # on transforme la partie rouge en liste
     r = list( r.getdata() )
@@ -16,28 +16,28 @@ def stegano(imgpath, msg):
     # on transforme la chaîne en une liste de 0 et de 1 
     ascii = [ bin(ord(x))[2:].rjust(8,"0") for x in msg ]
     # transformation de la liste en chaîne
-    a = ''.join(ascii)
+    chaine = ''.join(ascii)
     # on code la longueur de la liste dans les 8 premiers pixels rouges
     for j in range(8):
         r[j] = 2 * int( r[j] // 2 ) + int( v[j] )
     # on code la chaîne dans les pixels
     for i in range(8*u):
-        r[i+8] = 2 * int( r[i+8] // 2 ) + int( a[i] )
+        r[i+8] = 2 * int( r[i+8] // 2 ) + int( chaine[i] )
         
     # on recrée l'image rouge 
     nr = Image.new("L",(16*w,16*h))
     nr = Image.new("L",(w,h))
     nr.putdata(r)
-    # fusion des trois nouvelles images
-    imgnew = Image.merge('RGBA',(nr,g,b,a))
+    # fusion des quatres nouvelles images
+    imgnew = Image.merge('RGBA', (nr, g, b, a))
     imgnew.save("/Users/matteo/Python projects/Maths/couv_image.png")
 
 stegano("/Users/matteo/Python projects/Maths/image.png",
-        "Bonsoir je veut prendre mon bus mais ce chlag est en retard !!!")
+        "Bonsoir je veux prendre mon bus mais ce schlag est en retard !!!")
 
 def get_msg(name_couv):
     im = Image.open(name_couv)
-    r , g , b = im.split()
+    r , g , b, a = im.split()
     r = list( r.getdata() )
     
     # lecture de la longueur de la chaine
