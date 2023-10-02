@@ -1,7 +1,25 @@
 from PIL import Image
-import numpy as np
+from cryptography.fernet import Fernet
+
+key = Fernet.generate_key()
+
+def encrypt(msg):
+    msg = msg.encode()
+    f = Fernet(key)
+    encrypted = f.encrypt(msg)
+    encrypted = key + encrypted
+    return encrypted.decode()
+
+def decode(msg):
+    key = msg[0:44].encode()
+    f = Fernet(key)
+    decrypted = f.decrypt(msg[44:])
+    return decrypted.decode()
+
 
 def stegano(imgpath, msg):
+    msg = encrypt(msg)
+    # on ouvre l'image
     im = Image.open(imgpath)
     im = im.convert("RGBA")
     # on récupère les dimensions de l'image
@@ -33,7 +51,7 @@ def stegano(imgpath, msg):
     imgnew.save("/Users/matteo/Python projects/Maths/couv_image.png")
 
 stegano("/Users/matteo/Python projects/Maths/image.png",
-        "Bonsoir je veux prendre mon bus mais ce schlag est en retard !!!")
+        "Bonjour, ceci est un test de stéganographie. Le message est caché dans les pixels rouge.")
 
 def get_msg(name_couv):
     im = Image.open(name_couv)
@@ -52,7 +70,8 @@ def get_msg(name_couv):
     for k in range(0,q):
         l = b[8*k:8*k+8]
         message += chr(int(l,2))
-        
+    
+    message = decode(message)
     return message
 
 print(get_msg("/Users/matteo/Python projects/Maths/couv_image.png"))
