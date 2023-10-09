@@ -32,20 +32,20 @@ def stegano(imgSourcePath, msg, imgOutPath):
     # on sépare l'image en quatre : rouge, vert, bleu, a
     r , g , b, a = img.split()
     # on transforme la partie rouge en liste
-    r = list( r.getdata() )
+    r = list( r.getdata())
     # on calcule la longueur de la chaîne et on la transforme en binaire
     longueurChaine = len(msg)
-    longueurChaineBinaire = bin( len(msg) )[2:].rjust(16,"0")
+    longueurChaineBinaire = bin(len(msg))[2:].rjust(16,"0")
     # on transforme la chaîne en une liste de 0 et de 1 
-    ascii = [ bin(ord(x))[2:].rjust(8,"0") for x in msg ]
+    ascii = [bin(ord(x))[2:].rjust(8,"0") for x in msg]
     # transformation de la liste en chaîne
     chaine = ''.join(ascii)
     # on code la longueur de la liste dans les 16 premiers pixels rouges
     for j in range(16):
-        r[j] = 2 * int( r[j] // 2 ) + int( longueurChaineBinaire[j] )
+        r[j] = 2 * int(r[j] // 2) + int(longueurChaineBinaire[j])
     # on code la chaîne dans les pixels
     for i in range(8 * longueurChaine):
-        r[i+16] = 2 * int( r[i+16] // 2 ) + int( chaine[i] )
+        r[i+16] = 2 * int(r[i+16] // 2) + int(chaine[i])
         
     # on recrée l'image rouge
     nr = Image.new("L", (width, heigth))
@@ -57,15 +57,15 @@ def stegano(imgSourcePath, msg, imgOutPath):
 def get_msg(name_couv):
     img = Image.open(name_couv)
     r , g , b, a = img.split()
-    r = list( r.getdata() )
+    r = list(r.getdata())
     
     # lecture de la longueur de la chaine
-    p = [ str(x%2) for x in r[0:16] ]
+    p = [str(x%2) for x in r[0:16]]
     q = "".join(p)
     q = int(q,2)
     
     # lecture du message
-    n = [ str(x%2) for x in r[16:16*(q+1)] ]
+    n = [str(x%2) for x in r[16:16*(q+1)]]
     b = "".join(n)
     message = ""
     for k in range(0,q):
