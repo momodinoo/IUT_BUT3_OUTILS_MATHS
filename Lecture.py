@@ -7,7 +7,6 @@ if ".png" not in imgname:
     imgname += ".png"
 print("Le nom de votre image est : " + imgname)
 
-
 try:
     msg = get_msg(imgname)
 except:
