@@ -60,7 +60,7 @@ def stegano(sourceimgname, message, newimgname):
     imgnew.save(newimgname)
 
     if message == get_msg(newimgname):
-        print('\033[92m' + "Le message à bien été écrit dans l'image : " + newimgname)
+        print('\033[92m' + "Le message à bien été écrit dans l'image : " + newimgname + '\033[0m')
     else:
         raise Exception("Le message n'est pas bon")
 

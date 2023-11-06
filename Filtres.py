@@ -62,5 +62,15 @@ def apply_filter(kernel, img: Image, save_path: str):
 
 
 if __name__ == '__main__':
-  img = Image.open('ordinateur.png')
-  apply_filter(kernels['blur'], img, 'save.png')
+  from Func import stegano, get_msg
+
+  image = Image.open('image.png')
+  apply_filter(kernels['blur'], image, 'image_filtre.png')
+
+  message = 'Ceci est un message caché dans une image avec un filtre'
+  try:
+    stegano('image_filtre.png', message, 'image_filtre_avec_message.png')
+    print(get_msg('image_filtre_avec_message.png'))
+  except:
+      print('\033[91m' + 'Le message n\'a pas été codé correctement' + '\033[0m')
+      exit()
